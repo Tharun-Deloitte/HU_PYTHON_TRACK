@@ -22,8 +22,8 @@ class Admin:
                         self.add_movies()
                     elif choice2 == 2:
                         self.edit_movies()
-                    # elif choice2 == 3:
-                    #     edit_timings()
+                    elif choice2 == 3:
+                        self.delete_movies()
                     elif choice2 == 4:
                         break
                     # else:
@@ -44,6 +44,7 @@ class Admin:
         Movies = {"title": " ", "genre": " ", "length": 0, "cast": " ", "director": " ", "rating": 0, "language": " ",
                   "shows": 0, "first_show": 0, "interval": 0, "gap": 0, "capacity": 0}
         timings = []
+
 
         mov_name = input("Enter the name of the movie to be added:-")
         mov_name = mov_name.upper()
@@ -96,16 +97,15 @@ class Admin:
         for i in range(no_shows):
             show_hr_up = show_hr_up + hours
             show_mn_up = show_mn_up + minutes
-            temp_dict={}
+            tempdict = {}
             if (show_mn_up >= 60):
                 show_hr_up += 1
                 show_mn_up = show_mn_up - 60
             end_time = "{}:{}".format(show_hr_up, show_mn_up)
             st = start_time + "-" + end_time
-
-            temp_dict.update({st: capacity})
-            timings.append(temp_dict)
-
+            #timings.append(st)
+            tempdict.update({st:capacity})
+            timings.append(tempdict)
             temp={mov_name:timings}
             self.movie_timings.update(temp)
             start_time = end_time
@@ -114,10 +114,20 @@ class Admin:
 
     def edit_movies(self):
 
+        if (len(self.added_movies) == 0):
+            print("First add the movie!! ")
+            self.add_movies()
+            return
         for i in range(len(self.added_movies)):
             print(self.added_movies[i]["title"])
 
         toEditTitle = input("Enter the movie title which you want to be updated")
+        if self.added_movies[i]["title"] == toEditTitle:
+            cont = "y"
+        else:
+            self.edit_movies()
+            return
+
         print("Enter which data you want to edit")
         print(
             "1.Genre\n2.Cast\n3.Director\n4.Admin Rating\n5.Language\n6.Length\tTimings\tNumber of Shows\t.First Show\tInterval\tTimeGap\tCapacity")
@@ -177,7 +187,7 @@ class Admin:
                 first_show = "{}:{}".format(show_hr, show_mn)
                 new_interval = int(input("Enter the new interval\n"))
                 new_gap = int(input("Enter the new gap\n"))
-                new_capacity = int(input("Enter the new capacity\n"))
+                new_capacity=int(input("enter new capacity\n"))
                 timings=[]
 
                 total_runtime = new_length + new_interval + new_gap
@@ -190,16 +200,15 @@ class Admin:
                 for i in range(new_no_shows):
                     show_hr_up = show_hr_up + hours
                     show_mn_up = show_mn_up + minutes
-                    temp_dict={}
+                    tempdict={}
                     if (show_mn_up >= 60):
                         show_hr_up += 1
                         show_mn_up = show_mn_up - 60
                     end_time = "{}:{}".format(show_hr_up, show_mn_up)
                     st = start_time + "-" + end_time
-
-                    temp_dict.update({st: new_capacity})
-                    timings.append(temp_dict)
-
+                    #timings.append(st)
+                    tempdict.update({st:new_capacity})
+                    timings.append(tempdict)
                     temp = {toEditTitle: timings}
                     del self.movie_timings[toEditTitle]
                     self.movie_timings.update(temp)
@@ -220,23 +229,27 @@ class Admin:
             print(self.movie_timings)
 
     def delete_movies(self):
-        if (len(self.added_movies) == 0):
+        if(len(self.added_movies)==0):
             print("first enter the details")
             self.add_movies()
-        print("List of movies")
+            return 0
         for i in range(len(self.added_movies)):
             print(self.added_movies[i]["title"])
         toDeleteMovie = input("Enter the movie name to be deleted")
-        flag = 0
-        flag1 = 0
+        flag=0
+        flag1=0
         for i in range(len(self.added_movies)):
             if self.added_movies[i]["title"] == toDeleteMovie:
                 del self.added_movies[i]
-                flag = 1
-                flag1 = 1
+                flag=1
+                flag1=1
                 break
-        if (flag == 0):
+
+        del self.movie_timings[toDeleteMovie]
+
+        if(flag==0):
             print("enter correct details")
             self.delete_movies()
-        if (flag1):
+        if(flag1):
             print(self.added_movies)
+            print(self.movie_timings)

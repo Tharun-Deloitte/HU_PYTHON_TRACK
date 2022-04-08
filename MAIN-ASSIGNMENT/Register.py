@@ -1,37 +1,33 @@
 from openpyxl import *
-
-
 class Register:
-
-    def register_user(self):
-
+    def user_register(self):
         print("****Create new Account*****\n")
-        name = input("Enter the name\n")
-        email = input("Enter the email\n")
-        password = input("Enter the password\n")
-        phone = int(input("Enter the Phone number\n"))
-        age = int(input("Enter the age\n"))
+        name=input("enter the name")
+        email=input("enter the email")
+        password = input("enter the password")
+        phonenumber=int(input("enter the phone number"))
+        age=int(input("enter the age"))
         file = "User.xlsx"
-        workBook = load_workbook(file)
-        workSheet = workBook['Sheet1']
-        li = [name, email, password, phone, age]
-        result = []
+        wb = load_workbook(file)
+        ws = wb['Sheet1']
+        li=[name,email,password,phonenumber,age]
+        final = []
         i = -1
-        for row in workSheet:
+        for row in ws:
             l = []
             for col in row:
                 l.append(col.value)
-            result.append(l)
+            final.append(l)
             i += 1
-        result.append(li)
-        print(result)
-        workSheet.insert_rows(i)
+        final.append(li)
+        #print(final)
+        ws.insert_rows(i)
 
         i = 0
-        for row in workSheet:
+        for row in ws:
             j = 0
             for index, col in enumerate(row):
-                col.value = result[i][j]
+                col.value = final[i][j]
                 j += 1
             i += 1
-        workBook.save("User.xlsx")
+        wb.save("User.xlsx")
